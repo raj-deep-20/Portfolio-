@@ -1,0 +1,850 @@
+<!DOCTYPE html>
+<html lang="en" class="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Engineering Portfolio</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <!-- Tailwind CSS with JIT -->
+  <script src="https://cdn.tailwindcss.com?plugins=forms,typography,aspect-ratio"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          animation: {
+            'float': 'float 6s ease-in-out infinite',
+            'fadeIn': 'fadeIn 0.8s ease-out forwards',
+            'wave': 'wave 2s linear infinite',
+            'progress': 'progress 1.5s ease-in-out forwards'
+          },
+          keyframes: {
+            float: {
+              '0%, 100%': { transform: 'translateY(0)' },
+              '50%': { transform: 'translateY(-20px)' }
+            },
+            fadeIn: {
+              '0%': { opacity: '0', transform: 'translateY(20px)' },
+              '100%': { opacity: '1', transform: 'translateY(0)' }
+            },
+            wave: {
+              '0%': { transform: 'rotate(0deg)' },
+              '10%': { transform: 'rotate(14deg)' },
+              '20%': { transform: 'rotate(-8deg)' },
+              '30%': { transform: 'rotate(14deg)' },
+              '40%': { transform: 'rotate(-4deg)' },
+              '50%': { transform: 'rotate(10deg)' },
+              '60%': { transform: 'rotate(0deg)' },
+              '100%': { transform: 'rotate(0deg)' }
+            },
+            progress: {
+              '0%': { width: '0%' },
+              '100%': { width: 'var(--width)' }
+            }
+          }
+        }
+      }
+    }
+  </script>
+  
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  
+  <style>
+    /* Custom styles */
+    html {
+      scroll-behavior: smooth;
+      scroll-padding-top: 80px;
+    }
+    
+    .section {
+      @apply py-20 px-4 transition-colors duration-300;
+    }
+    
+    .dark .section {
+      @apply bg-gray-900;
+    }
+    
+    .skill-bar {
+      --width: 0%;
+      width: 0%;
+      animation: progress 1.5s ease-in-out forwards;
+    }
+    
+    .tech-card {
+      @apply bg-white dark:bg-gray-800 p-6 rounded-xl shadow-md hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1;
+    }
+    
+    .project-card {
+      @apply bg-white dark:bg-gray-800 rounded-xl overflow-hidden shadow-lg transition-all duration-500 hover:shadow-2xl transform hover:-translate-y-2;
+    }
+    
+    .testimonial-card {
+      @apply bg-white dark:bg-gray-800 p-6 rounded-xl shadow-md transition-all duration-300 hover:shadow-lg;
+    }
+    
+    .academic-card {
+      @apply bg-white dark:bg-gray-800 p-6 rounded-xl shadow-md transition-all duration-300 hover:shadow-lg border-l-4 border-blue-500;
+    }
+    
+    .profile-pic {
+      @apply w-40 h-40 md:w-56 md:h-56 rounded-full object-cover border-4 border-white dark:border-gray-800 shadow-xl mx-auto;
+    }
+    
+    /* Custom scrollbar */
+    ::-webkit-scrollbar {
+      width: 8px;
+    }
+    ::-webkit-scrollbar-track {
+      @apply bg-gray-100 dark:bg-gray-800;
+    }
+    ::-webkit-scrollbar-thumb {
+      @apply bg-blue-500 rounded-full;
+    }
+  </style>
+</head>
+<body class="bg-gray-50 dark:bg-gray-900 text-gray-800 dark:text-gray-200 font-sans transition-colors duration-300">
+  <!-- Theme Toggle -->
+  <button id="theme-toggle" class="fixed bottom-6 right-6 z-50 p-3 rounded-full bg-white dark:bg-gray-800 shadow-xl hover:shadow-2xl transition-all duration-300">
+    <svg id="theme-icon" xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-yellow-500 dark:text-blue-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+      <path id="theme-path" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
+    </svg>
+  </button>
+
+  <!-- Navigation -->
+  <nav class="fixed w-full bg-white/80 dark:bg-gray-800/80 backdrop-blur-md z-40 shadow-sm transition-colors duration-300">
+    <div class="max-w-7xl mx-auto px-4">
+      <div class="flex justify-between items-center h-20">
+        <h1 class="text-xl font-bold">
+          <span class="text-blue-600 dark:text-blue-400">My Portfolio</span>
+        </h1>
+        
+        <div class="hidden md:flex space-x-8">
+          <a href="#home" class="nav-link">Home</a>
+          <a href="#about" class="nav-link">About</a>
+          <a href="#skills" class="nav-link">Skills</a>
+          <a href="#projects" class="nav-link">Projects</a>
+          <a href="#academics" class="nav-link">Academics</a>
+          <a href="#contact" class="nav-link">Contact</a>
+        </div>
+        
+        <button id="mobile-menu-button" class="md:hidden">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+          </svg>
+        </button>
+      </div>
+    </div>
+    
+    <!-- Mobile Menu -->
+    <div id="mobile-menu" class="fixed inset-0 bg-white dark:bg-gray-900 z-40 transform translate-x-full transition-transform duration-300 ease-in-out">
+    <div class="flex flex-col space-y-6 text-center">
+        <a href="#home" class="mobile-nav-link">Home</a>
+        <a href="#about" class="mobile-nav-link">About</a>
+        <a href="#skills" class="mobile-nav-link">Skills</a>
+        <a href="#projects" class="mobile-nav-link">Projects</a>
+        <a href="#academics" class="mobile-nav-link">Academics</a>
+        <a href="#contact" class="mobile-nav-link">Contact</a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Main Content -->
+  <main>
+    <!-- Hero Section -->
+   <section id="home" class="min-h-screen flex items-center justify-center px-4 pt-20 section py-10">
+  <div class="max-w-4xl mx-auto text-center" data-aos="fade-in">
+    
+    <!-- Profile Image -->
+    <div class="mb-8 animate-float flex justify-center">
+    <img src="assets/self_profile.jpg"
+     alt="Profile"
+     class="rounded-full object-cover shadow-lg
+            w-32 h-32               /* circle on small screens */
+            md:w-40 md:h-60        /* oval on medium screens */
+            lg:w-44 lg:h-80        /* taller oval on large screens */
+            xl:w-48 xl:h-96        /* portrait oval on extra-large */" />
+    </div>
+    
+    <!-- Heading and Subheading -->
+    <h1 class="text-4xl md:text-6xl font-bold mb-6">
+      <span class ="typing-animation text-blue-600 dark:text-blue-400">Hi | Hola | Bonjour</span>, I'm <span class="text-blue-600 dark:text-blue-400">Rajdeep</span>
+      <span class="wave inline-block">👋</span>
+    </h1>
+
+    <h2 class="text-xl md:text-2xl text-gray-600 dark:text-gray-300 mb-8">
+      <span>
+        AI/ML Enthusiast | Web Developer | Passionate Coder
+      </span>
+    </h2>
+
+    <!-- Buttons -->
+    <div class="flex flex-wrap justify-center gap-4">
+    <!-- Primary Button -->
+<a href="#projects"
+   class="px-6 py-2 rounded-md font-medium text-white bg-blue-600 hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-600 transition duration-300">
+  View My Work
+</a>
+
+<!-- Secondary Button -->
+<a href="#contact"
+   class="px-6 py-2 rounded-md font-medium text-blue-600 border border-blue-600 hover:bg-blue-600 hover:text-white dark:text-blue-400 dark:border-blue-400 dark:hover:bg-blue-400 dark:hover:text-white transition duration-300">
+  Contact Me
+</a>
+
+<!-- Tertiary Button (Resume) -->
+<a href="#" id="resume-btn"
+   class="px-6 py-2 rounded-md font-medium text-gray-700 border border-gray-400 hover:bg-gray-200 hover:text-black dark:text-gray-300 dark:border-gray-500 dark:hover:bg-gray-700 dark:hover:text-white transition duration-300">
+  <i class="fas fa-file-pdf mr-2"></i> Download CV
+</a>
+
+    </div>
+
+  </div>
+</section>
+
+
+ <!-- About Section -->
+<section id="about" class="py-10 section relative bg-gradient-to-br from-white via-blue-50 to-white dark:from-gray-900 dark:via-gray-800 dark:to-gray-900">
+  <div class="max-w-6xl mx-auto px-4">
+    
+    <!-- Heading -->
+    <h2 class="text-4xl font-extrabold text-center mb-4">
+      About <span class="bg-blue-500 bg-clip-text text-transparent">Me</span>
+    </h2>
+    <p class="text-center text-gray-600 dark:text-gray-400 text-lg mb-12">
+      Get to know the person behind the code 🎯
+    </p>
+    
+    <div class="grid md:grid-cols-2 gap-12 items-center">
+      
+      <!-- Image Block -->
+      <div class="order-2 md:order-1 flex justify-center animate-float" data-aos="fade-right">
+        <img src="assets/about_pic.jpg" 
+             alt="About Me" 
+             class="rounded-3xl shadow-[0_20px_50px_rgba(8,_112,_184,_0.2)] w-full max-w-md object-cover">
+      </div>
+      
+      <!-- Text Block -->
+      <div class="order-1 md:order-2 space-y-6" data-aos="fade-left">
+        <h3 class="text-2xl font-semibold text-blue-700 dark:text-blue-400">👨‍💻 Aspiring Engineer</h3>
+        <p class="text-gray-700 dark:text-gray-300 text-lg leading-relaxed">
+          I’m a passionate <span class="font-semibold text-blue-600 dark:text-blue-400">AI/ML engineering undergrad</span> driven by curiosity and creativity.
+          I love exploring intelligent systems, machine learning, and data-driven solutions to create a smarter, more connected world.
+        </p>
+        
+        <!-- Personal Info -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+          <div class="flex items-start space-x-3">
+            <i class="fas fa-envelope text-blue-500 text-xl mt-1"></i>
+            <div>
+              <p class="font-semibold">Email</p>
+              <p class="text-gray-600 dark:text-gray-300">iamrajdeep2005@gmail.com</p>
+            </div>
+          </div>
+          
+          <div class="flex items-start space-x-3">
+            <i class="fas fa-university text-blue-500 text-xl mt-1"></i>
+            <div>
+              <p class="font-semibold">College</p>
+              <p class="text-gray-600 dark:text-gray-300">Techno Main Salt Lake</p>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Interests -->
+        <p class="text-gray-700 dark:text-gray-300 text-lg">
+          Outside academics, you’ll find me:
+          <ul class="list-disc ml-6 mt-2 space-y-1">
+            <li>Solving <span class="text-blue-600 dark:text-blue-400">LeetCode</span> problems</li>
+            <li>Writing poems & short stories</li>
+            <li>Exploring creative ideas & projects</li>
+            <li>Strumming my <span class="text-blue-600 dark:text-blue-400">guitar</span> 🎸</li>
+          </ul>
+        </p>
+      </div>
+      
+    </div>
+  </div>
+</section>
+
+
+    <!-- Skills & Tech Stack Section -->
+    <section id="skills" class="section bg-gray-50 dark:bg-gray-800">
+    <div class="py-10 max-w-6xl mx-auto px-4">
+    
+    <h2 class="text-4xl font-extrabold text-center mb-4">
+      My <span class="bg-blue-500 bg-clip-text text-transparent">Skills</span>
+    </h2>
+
+    <!-- Doughnut Charts -->
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 text-center">
+      <!-- C/C++ -->
+      <div>
+        <canvas id="cSkillChart" class="mx-auto h-40 w-40"></canvas>
+        <p class="mt-4 font-semibold">C/C++ – 9%</p>
+      </div>
+      <!-- Python -->
+      <div>
+        <canvas id="pythonSkillChart" class="mx-auto h-40 w-40"></canvas>
+        <p class="mt-4 font-semibold">Python – 80%</p>
+      </div>
+      <!-- JavaScript -->
+      <div>
+        <canvas id="jsSkillChart" class="mx-auto h-40 w-40"></canvas>
+        <p class="mt-4 font-semibold">JavaScript – 60%</p>
+      </div>
+      <!-- MERN -->
+      <div>
+        <canvas id="mernSkillChart" class="mx-auto h-40 w-40"></canvas>
+        <p class="mt-4 font-semibold">MERN Stack – 75%</p>
+      </div>
+      <!-- Problem Solving -->
+      <div>
+        <canvas id="problemSkillChart" class="mx-auto h-40 w-40"></canvas>
+        <p class="mt-4 font-semibold">Problem Solving – 80%</p>
+      </div>
+      <!-- Team Leadership -->
+      <div>
+        <canvas id="teamSkillChart" class="mx-auto h-40 w-40"></canvas>
+        <p class="mt-4 font-semibold">Team Leadership – 75%</p>
+      </div>
+    </div>
+  </div>
+
+        
+        <!-- Tech Stack -->
+       <section class="py-12 px-4 sm:px-6 lg:px-8 bg-white dark:bg-gray-800">
+  <h3 class="text-2xl font-semibold text-center mb-8" data-aos="fade-up">
+    My <span class="text-blue-600 dark:text-blue-400">Tech Stack</span>
+  </h3>
+  
+  <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-6" data-aos="fade-up">
+    <!-- C++ -->
+    <div class="tech-card flex flex-col items-center p-4 rounded-lg bg-gray-50 dark:bg-gray-700 hover:shadow-md transition-shadow">
+      <img src="assets/c++.png" alt="C++" class="h-12 w-12 object-contain mb-2">
+      <p class="text-center font-medium dark:text-white">C++</p>
+    </div>
+    
+    <!-- Python -->
+    <div class="tech-card flex flex-col items-center p-4 rounded-lg bg-gray-50 dark:bg-gray-700 hover:shadow-md transition-shadow">
+      <img src="assets/python.png" alt="Python" class="h-12 w-12 object-contain mb-2">
+      <p class="text-center font-medium dark:text-white">Python</p>
+    </div>
+    
+    <!-- JavaScript -->
+    <div class="tech-card flex flex-col items-center p-4 rounded-lg bg-gray-50 dark:bg-gray-700 hover:shadow-md transition-shadow">
+      <img src="assets/JavaScript-logo.png" alt="JavaScript" class="h-12 w-12 object-contain mb-2">
+      <p class="text-center font-medium dark:text-white">JavaScript</p>
+    </div>
+    
+    <!-- React -->
+    <div class="tech-card flex flex-col items-center p-4 rounded-lg bg-gray-50 dark:bg-gray-700 hover:shadow-md transition-shadow">
+      <img src="assets/React.webp" alt="React" class="h-12 w-12 object-contain mb-2">
+      <p class="text-center font-medium dark:text-white">React</p>
+    </div>
+    
+    <!-- MongoDB -->
+    <div class="tech-card flex flex-col items-center p-4 rounded-lg bg-gray-50 dark:bg-gray-700 hover:shadow-md transition-shadow">
+      <img src="assets/Mongodb.png" alt="MongoDB" class="h-12 w-12 object-contain mb-2">
+      <p class="text-center font-medium dark:text-white">MongoDB</p>
+    </div>
+    
+    <!-- Node.js (replaced duplicate JavaScript) -->
+    <div class="tech-card flex flex-col items-center p-4 rounded-lg bg-gray-50 dark:bg-gray-700 hover:shadow-md transition-shadow">
+      <img src="assets/Tensorflow_logo.png" alt="Node.js" class="h-12 w-12 object-contain mb-2">
+      <p class="text-center font-medium dark:text-white">Tensorflow</p>
+    </div>
+  </div>
+</section>
+
+    <!-- Projects Section -->
+  <!-- Projects Section -->
+<section id="projects" class="section bg-white dark:bg-gray-900">
+  <div class="max-w-6xl mx-auto">
+    <h2 class="text-3xl font-bold text-center mb-12 py-10">
+      My <span class="text-blue-600 dark:text-blue-400">Projects</span>
+    </h2>
+
+    <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+     <!-- Project 1: Breakfast Recommender -->
+<div class="project-card px-4" data-aos="fade-up">
+  <!-- Replace icon with image -->
+  <div class="h-48 overflow-hidden">
+    <img src="assets/Breakfast_App.jpg" alt="Breakfast App" class="w-full h-full object-cover">
+  </div>
+  
+  <div class="p-6">
+    <h3 class="text-xl font-bold mb-2">Breakfast Recommender App</h3>
+    <p class="text-gray-600 dark:text-gray-300 mb-4">ML-based app suggesting personalized breakfast options based on nutrition and preferences.</p>
+    
+    <!-- Tech stack -->
+    <div class="flex flex-wrap gap-2 mb-4">
+      <span class="bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-200 px-3 py-1 rounded-full text-sm">Python</span>
+      <span class="bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-200 px-3 py-1 rounded-full text-sm">Pandas</span>
+      <span class="bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-200 px-3 py-1 rounded-full text-sm">Streamlit</span>
+    </div>
+
+    <!-- Only GitHub Button -->
+    <div class="flex">
+      <a href="#" class="text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 transition-colors">
+        <i class="fab fa-github mr-1"></i> Code
+      </a>
+    </div>
+  </div>
+</div>
+
+      <!-- Project 2: Internship Finder -->
+      <div class="project-card" data-aos="fade-up" data-aos-delay="100">
+       <div class="h-48 overflow-hidden">
+    <img src="assets/intern.jpg" alt="InternBuddy App" class="w-full h-full object-cover">
+  </div>
+        <div class="p-6">
+          <h3 class="text-xl font-bold mb-2">InternBuddy Web App</h3>
+          <p class="text-gray-600 dark:text-gray-300 mb-4">MERN-based platform for students to explore and post internships with login support.</p>
+          <div class="flex flex-wrap gap-2 mb-4">
+            <span class="bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-200 px-3 py-1 rounded-full text-sm">MongoDB</span>
+            <span class="bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-200 px-3 py-1 rounded-full text-sm">Express</span>
+            <span class="bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-200 px-3 py-1 rounded-full text-sm">React</span>
+            <span class="bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-200 px-3 py-1 rounded-full text-sm">Node.js</span>
+          </div>
+          <div class="flex space-x-3">
+            <a href="#" class="text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 transition-colors">
+              <i class="fab fa-github mr-1"></i> Code
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <!-- Project 3: Weatheroo -->
+      <div class="project-card" data-aos="fade-up" data-aos-delay="200">
+        <div class="h-48 overflow-hidden">
+    <img src="assets/weather.webp" alt="Weatheroo App" class="w-full h-full object-cover">
+  </div>
+        <div class="p-6">
+          <h3 class="text-xl font-bold mb-2">Weatheroo – Weather App</h3>
+          <p class="text-gray-600 dark:text-gray-300 mb-4">A responsive web app to view current weather, 5-day forecast, and search history.</p>
+          <div class="flex flex-wrap gap-2 mb-4">
+            <span class="bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-200 px-3 py-1 rounded-full text-sm">HTML</span>
+            <span class="bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-200 px-3 py-1 rounded-full text-sm">Tailwind</span>
+            <span class="bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-200 px-3 py-1 rounded-full text-sm">JavaScript</span>
+            <span class="bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-200 px-3 py-1 rounded-full text-sm">API</span>
+          </div>
+          <div class="flex space-x-3">
+            <a href="#" class="text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 transition-colors">
+              <i class="fab fa-github mr-1"></i> Code
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+    <!-- Academics Section -->
+    <section id="academics" class="section bg-gray-50 dark:bg-gray-800">
+      <div class="max-w-6xl mx-auto">
+        <h2 class="text-3xl font-bold text-center mb-12 py-10">
+          My <span class="text-blue-600 dark:text-blue-400">Academics</span>
+        </h2>
+        
+        <div class="grid md:grid-cols-2 gap-8">
+          <!-- Education -->
+          <div data-aos="fade-up">
+            <h3 class="text-xl font-semibold mb-6 text-center">Education</h3>
+            <div class="space-y-6">
+              <div class="academic-card" data-aos="fade-up">
+                <div class="flex justify-between items-start">
+                  <div>
+                    <h4 class="font-bold text-lg">Techno Main Salt Lake</h4>
+                    <p class="text-gray-600 dark:text-gray-300">B.Tech in Computer Science and Engineering (AIML)</p>
+                  </div>
+                  <span class="bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-200 px-3 py-1 rounded-full text-sm">2023-2027</span>
+                </div>
+                <p class="mt-3 text-gray-600 dark:text-gray-300">GPA: 8.46</p>
+                <div class="mt-4">
+                  <a href="#" class="text-blue-600 dark:text-blue-400 hover:underline flex items-center">
+                    <i class="fas fa-file-pdf mr-2"></i> View Marksheets
+                  </a>
+                </div>
+              </div>
+              
+              <div class="academic-card" data-aos="fade-up" data-aos-delay="100">
+                <div class="flex justify-between items-start">
+                  <div>
+                    <h4 class="font-bold text-lg">Aditya Academy Senior Secondary, Dum Dum</h4>
+                    <p class="text-gray-600 dark:text-gray-300">Higher Secondary Examination</p>
+                  </div>
+                  <span class="bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-200 px-3 py-1 rounded-full text-sm">2022-23</span>
+                </div>
+                <p class="mt-3 text-gray-600 dark:text-gray-300">Percentage: 90.8</p>
+                <div class="mt-4">
+                  <a href="#" class="text-blue-600 dark:text-blue-400 hover:underline flex items-center">
+                    <i class="fas fa-file-pdf mr-2"></i> View Marksheet
+                  </a>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          <!-- Certifications -->
+          <div data-aos="fade-up" data-aos-delay="100">
+            <h3 class="text-xl font-semibold mb-6 text-center">Certifications</h3>
+            <div class="space-y-6">
+              <div class="academic-card" data-aos="fade-up">
+                <div class="flex justify-between items-start">
+                  <div>
+                    <h4 class="font-bold text-lg">AI in Healthcare</h4>
+                    <p class="text-gray-600 dark:text-gray-300">Udemy</p>
+                  </div>
+                  <span class="bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-200 px-3 py-1 rounded-full text-sm">2025</span>
+                </div>
+                <div class="mt-4">
+                  <a href="#" class="text-blue-600 dark:text-blue-400 hover:underline flex items-center">
+                    <i class="mr-2"></i> View Certificate
+                  </a>
+                </div>
+              </div>
+              
+              <div class="academic-card" data-aos="fade-up" data-aos-delay="100">
+                <div class="flex justify-between items-start">
+                  <div>
+                    <h4 class="font-bold text-lg">AWS - Solutions Architecture Job Simulation</h4>
+                    <p class="text-gray-600 dark:text-gray-300">Forage</p>
+                  </div>
+                  <span class="bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-200 px-3 py-1 rounded-full text-sm">2025</span>
+                </div>
+                <div class="mt-4">
+                  <a href="#" class="text-blue-600 dark:text-blue-400 hover:underline flex items-center">
+                    <i class="mr-2"></i> View Certificate
+                  </a>
+                </div>
+              </div>
+              
+              <div class="academic-card" data-aos="fade-up" data-aos-delay="200">
+                <div class="flex justify-between items-start">
+                  <div>
+                    <h4 class="font-bold text-lg">C/C++, DSA, Python Full Course</h4>
+                    <p class="text-gray-600 dark:text-gray-300">Aptech Solutions Ltd.</p>
+                  </div>
+                  <span class="bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-200 px-3 py-1 rounded-full text-sm">2024-25</span>
+                </div>
+                <div class="mt-4">
+                  <a href="#" class="text-blue-600 dark:text-blue-400 hover:underline flex items-center">
+                    <i class="mr-2"></i> View Certificates
+                  </a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  
+
+    <!-- Contact Section -->
+    <section id="contact" class="section bg-gray-50 dark:bg-gray-800 py-10">
+      <div class="max-w-4xl mx-auto">
+        <h2 class="text-3xl font-bold text-center mb-12 py-10">
+          Get In <span class="text-blue-600 dark:text-blue-400">Touch</span>
+        </h2>
+        
+        <div class="grid md:grid-cols-2 gap-12">
+          <div data-aos="fade-right">
+            <h3 class="text-xl font-semibold mb-4">Contact Information</h3>
+            <div class="space-y-4">
+              <div class="flex items-center">
+                <div class="bg-blue-100 dark:bg-blue-900 p-3 rounded-full mr-4">
+                  <i class="fas fa-envelope text-blue-600 dark:text-blue-400"></i>
+                </div>
+                <div>
+                  <p class="font-medium">Email</p>
+                  <p class="text-gray-600 dark:text-gray-300">iamrajdeep2005@gmail.com</p>
+                </div>
+              </div>
+              
+              <div class="flex items-center">
+                <div class="bg-blue-100 dark:bg-blue-900 p-3 rounded-full mr-4">
+                  <i class="fas fa-phone text-blue-600 dark:text-blue-400"></i>
+                </div>
+                <div>
+                  <p class="font-medium">Phone</p>
+                  <p class="text-gray-600 dark:text-gray-300">+91 9903147634</p>
+                </div>
+              </div>
+              
+              <div class="flex items-center">
+                <div class="bg-blue-100 dark:bg-blue-900 p-3 rounded-full mr-4">
+                  <i class="fas fa-map-marker-alt text-blue-600 dark:text-blue-400"></i>
+                </div>
+                <div>
+                  <p class="font-medium">Location</p>
+                  <p class="text-gray-600 dark:text-gray-300">Kolkata, West Bengal</p>
+                </div>
+              </div>
+            </div>
+            
+            <div class="mt-8">
+              <h3 class="text-xl font-semibold mb-4">Connect With Me</h3>
+              <div class="flex space-x-4">
+                <a href="#" class="social-icon">
+                  <i class="fab fa-linkedin-in"></i>
+                </a>
+                <a href="#" class="social-icon">
+                  <i class="fab fa-github"></i>
+                </a>
+                <a href="#" class="social-icon">
+                  <i class="fab fa-twitter"></i>
+                </a>
+                <a href="#" class="social-icon">
+                  <i class="fab fa-instagram"></i>
+                </a>
+              </div>
+            </div>
+          </div>
+          
+          <div data-aos="fade-left">
+            <form id="contact-form" class="bg-white dark:bg-gray-900 p-6 rounded-xl shadow-md">
+              <div class="mb-4">
+                <label for="name" class="block text-sm font-medium mb-1">Name</label>
+                <input type="text" id="name" required
+                       class="w-full px-4 py-2 border border-gray-300 dark:border-gray-700 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-800 transition">
+              </div>
+              
+              <div class="mb-4">
+                <label for="email" class="block text-sm font-medium mb-1">Email</label>
+                <input type="email" id="email" required
+                       class="w-full px-4 py-2 border border-gray-300 dark:border-gray-700 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-800 transition">
+              </div>
+              
+              <div class="mb-4">
+                <label for="message" class="block text-sm font-medium mb-1">Message</label>
+                <textarea id="message" rows="4" required
+                          class="w-full px-4 py-2 border border-gray-300 dark:border-gray-700 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-800 transition"></textarea>
+              </div>
+              
+              <button type="submit" 
+                      class="w-full bg-blue-600 hover:bg-blue-700 text-white py-3 rounded-lg font-medium transition-colors">
+                Send Message
+              </button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- Footer -->
+  <footer class="py-8 bg-gray-800 text-white text-center">
+    <div class="max-w-6xl mx-auto px-4">
+      <div class="flex flex-col md:flex-row justify-between items-center">
+        <div class="flex space-x-6">
+          <a href="#" class="text-gray-400 hover:text-white transition-colors">
+            <i class="fab fa-linkedin-in"></i>
+          </a>
+          <a href="#" class="text-gray-400 hover:text-white transition-colors">
+            <i class="fab fa-github"></i>
+          </a>
+          <a href="#" class="text-gray-400 hover:text-white transition-colors">
+            <i class="fab fa-twitter"></i>
+          </a>
+          <a href="#" class="text-gray-400 hover:text-white transition-colors">
+            <i class="fas fa-envelope"></i>
+          </a>
+        </div>
+      </div>
+      
+      <div class="mt-6 pt-6 border-t border-gray-700">
+        <p>&copy; 2025 Rajdeep Podder. All rights reserved.</p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- JavaScript -->
+  <script>
+    // Theme Toggle
+    const themeToggle = document.getElementById('theme-toggle');
+    const themeIcon = document.getElementById('theme-icon');
+    const themePath = document.getElementById('theme-path');
+    
+    if (themeToggle) {
+      themeToggle.addEventListener('click', () => {
+        document.documentElement.classList.toggle('dark');
+        
+        if (document.documentElement.classList.contains('dark')) {
+          themePath.setAttribute('d', 'M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z');
+        } else {
+          themePath.setAttribute('d', 'M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z');
+        }
+      });
+    }
+    
+    // Mobile Menu
+  const menuButton = document.getElementById('mobile-menu-button');
+  const mobileMenu = document.getElementById('mobile-menu');
+  const bar1 = document.getElementById('bar1');
+  const bar2 = document.getElementById('bar2');
+  const bar3 = document.getElementById('bar3');
+
+  function toggleMenu() {
+    const isOpen = mobileMenu.classList.contains('translate-x-0');
+
+    // Toggle menu visibility
+    mobileMenu.classList.toggle('translate-x-0', !isOpen);
+    mobileMenu.classList.toggle('translate-x-full', isOpen);
+
+    // Animate burger icon
+    bar1.classList.toggle('rotate-45', !isOpen);
+    bar1.classList.toggle('translate-y-1.5', !isOpen);
+    bar2.classList.toggle('opacity-0', !isOpen);
+    bar3.classList.toggle('-rotate-45', !isOpen);
+    bar3.classList.toggle('-translate-y-1.5', !isOpen);
+  }
+
+  // Toggle on burger icon click
+  menuButton.addEventListener('click', toggleMenu);
+
+  // Close menu on nav link click
+  document.querySelectorAll('.mobile-nav-link').forEach(link => {
+    link.addEventListener('click', () => {
+      // Only run if already open
+      if (mobileMenu.classList.contains('translate-x-0')) {
+        toggleMenu();
+      }
+    });
+  });
+    
+    // Animate elements when they come into view
+    const animateOnScroll = () => {
+      const elements = document.querySelectorAll('[data-aos]');
+      
+      elements.forEach(element => {
+        const elementTop = element.getBoundingClientRect().top;
+        const elementVisible = 150;
+        
+        if (elementTop < window.innerHeight - elementVisible) {
+          element.classList.add('animate-fadeIn');
+        }
+      });
+    };
+    
+    window.addEventListener('scroll', animateOnScroll);
+    animateOnScroll(); // Run once on load
+    
+    // Resume button
+    const resumeBtn = document.getElementById('resume-btn');
+    if (resumeBtn) {
+      resumeBtn.addEventListener('click', (e) => {
+        e.preventDefault();
+        alert('Downloading resume...');
+        // In a real implementation, this would link to your PDF
+        // window.open('/resume.pdf', '_blank');
+      });
+    }
+    
+    // Contact form submission
+    const contactForm = document.getElementById('contact-form');
+    if (contactForm) {
+      contactForm.addEventListener('submit', (e) => {
+        e.preventDefault();
+        
+        // Get form values
+        const name = document.getElementById('name').value;
+        const email = document.getElementById('email').value;
+        const message = document.getElementById('message').value;
+        
+        // Here you would typically send the data to a server
+        console.log('Form submitted:', { name, email, message });
+        
+        // Show success message
+        alert(`Thanks for your message, ${name}! I'll get back to you soon.`);
+        contactForm.reset();
+      });
+    }
+    
+    // Typewriter effect for hero section
+    const typeWriter = () => {
+      const textElement = document.querySelector('.typing-animation');
+      if (!textElement) return;
+      
+      const texts = textElement.textContent.split('|').map(t => t.trim());
+      textElement.textContent = '';
+      let index = 0;
+      let charIndex = 0;
+      let isDeleting = false;
+      let typingSpeed = 100;
+      
+      const type = () => {
+        const currentText = texts[index];
+        
+        if (isDeleting) {
+          textElement.textContent = currentText.substring(0, charIndex - 1);
+          charIndex--;
+          typingSpeed = 50;
+        } else {
+          textElement.textContent = currentText.substring(0, charIndex + 1);
+          charIndex++;
+          typingSpeed = 100;
+        }
+        
+        if (!isDeleting && charIndex === currentText.length) {
+          isDeleting = true;
+          typingSpeed = 2000; // Pause at end of text
+        } else if (isDeleting && charIndex === 0) {
+          isDeleting = false;
+          index = (index + 1) % texts.length;
+          typingSpeed = 500; // Pause before typing next text
+        }
+        
+        setTimeout(type, typingSpeed);
+      };
+      
+      setTimeout(type, 1000);
+    };
+    
+    // Initialize all animations
+    document.addEventListener('DOMContentLoaded', () => {
+      typeWriter();
+      
+      // Animate skill bars
+      const skillBars = document.querySelectorAll('.skill-bar');
+      skillBars.forEach(bar => {
+        const width = bar.style.getPropertyValue('--width');
+        bar.style.width = width;
+      });
+    });
+  </script>
+  <script>
+  const createDoughnut = (id, value, color) => {
+    new Chart(document.getElementById(id), {
+      type: 'doughnut',
+      data: {
+        datasets: [{
+          data: [value, 100 - value],
+          backgroundColor: [color, '#e5e7eb'], // bg-gray-200 for light
+          borderWidth: 0
+        }]
+      },
+      options: {
+        cutout: '70%',
+        responsive: true,
+        plugins: {
+          legend: { display: false },
+          tooltip: { enabled: false }
+        }
+      }
+    });
+  };
+
+  // Chart Calls
+  createDoughnut('cSkillChart', 90, '#3b82f6');       // blue
+  createDoughnut('pythonSkillChart', 80, '#facc15');  // yellow
+  createDoughnut('jsSkillChart', 60, '#10b981');      // green
+  createDoughnut('mernSkillChart', 75, '#f97316');    // orange
+  createDoughnut('problemSkillChart', 80, '#6366f1'); // indigo
+  createDoughnut('teamSkillChart', 75, '#14b8a6');     // teal
+</script>
+
+</body>
+</html>
